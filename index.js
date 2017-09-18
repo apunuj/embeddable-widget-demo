@@ -99,3 +99,8 @@ console.log('hello from server');
     xhr.send();
   }
 })();
+
+serverApp.get('/api/3rd/foo-widget/init/:id', function(req, res) {
+  var id = req.params.id;
+  res.send('api response #'+id);
+});
