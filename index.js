@@ -41,3 +41,25 @@ clientApp.get('/', function(req, res) {
     platformScript: platformScript
   });
 });
+
+//Enabling CORS in the serverApp
+serverApp.use(function(req, res, next) {
+  console.log('cors middleware');
+  if ((/^\/api\/3rd\/.+$/).test(req.path)) {
+    var corsOrigin = req.headers.origin;
+    var corsMethod = req.headers['access-control-request-method'];
+    var corsHeaders = req.headers['acces-control-request-headers'];
+    var hasACorsFlag = corsOrigin || corsMethod || corsHeaders;
+    if (hasACorsFlag) {
+      res.header('Access-Control-Allow-Origin', corsOrigin);
+      res.header('Access-Control-Allow_Methods', corsMethod);
+      res.header('Access-Control-Allow-Headers', corsHeaders);
+      res.header('Access-Control-Max-Age', 60 * 60 * 24);
+      if (req.method === 'OPTIONS') {
+        res.send(200);
+        return;
+      }
+    }
+  }
+  next();
+});
