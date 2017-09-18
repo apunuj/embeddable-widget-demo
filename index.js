@@ -31,3 +31,13 @@ function getIpAddress() {
 
 var serverHost = '//'+getIpAddress()+':'+serverPort;
 var platformScript = '/3rd/platform.js';
+
+
+clientApp.set('view engine', 'html');
+clientApp.engine('html', ejs.renderFile);
+clientApp.get('/', function(req, res) {
+  res.render('client/index', {
+    serverHost: serverHost,
+    platformScript: platformScript
+  });
+});
