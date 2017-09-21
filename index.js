@@ -49,6 +49,7 @@ function isValidPartyId(partyId) {
 }
 
 function isOriginAllowedForThisPartyId(origin, partyId) {
+  console.log('Entering isOriginAllowed function');
   var allowedHostsForParty = demo3rdPartyAllowedHostsFixtures[''+partyId];
   if (Array.isArray(allowedHostsForParty)) {
     var hostSansProtocol = origin.split('//');
@@ -57,6 +58,7 @@ function isOriginAllowedForThisPartyId(origin, partyId) {
     return (allowedHostsForParty.indexOf(hostSansProtocol) >= 0);
   }
   else {
+    console.log("Returning false from isOriginAllowed function");
     return false;
   }
 }
@@ -67,12 +69,15 @@ serverApp.use(function(req, res, next) {
   if ((/^\/api\/3rd\/.+$/).test(req.path)) {
     var partyId = req.query.partyId;
     if ( !isValidPartyId(partyId)) {
+      console.log("My code is reaching to status 403");
       res.status(403).end();
       return;
     }
     var corsOrigin = req.headers.origin;
     var corsMethod = req.headers['access-control-request-method'];
-    var corsHeaders = req.headers['acces-control-request-headers'];
+    console.log("--cors Method--",corsMethod);
+    var corsHeaders = req.headers['access-control-request-headers'];
+    console.log("--CORS Headers--",corsHeaders);
     var hasACorsFlag = corsOrigin || corsMethod || corsHeaders;
     if (hasACorsFlag) {
 
@@ -142,6 +147,7 @@ serverApp.post('/api/3rd/:platform/widget/:id/:action', function(req, res) {
     content: req.body
   });
 });
+
 serverApp.use(express.static('server'));
 
 
@@ -150,11 +156,12 @@ var clientApp = express();
 
 clientApp.set('view engine', 'html');
 clientApp.engine('html', ejs.renderFile);
-/*clientApp.get('/favicon.ico', function(req, res) {
+clientApp.get('/favicon.ico', function(req, res) {
     res.status(404).end();
-});*/
+});
 
 clientApp.get('/:platform/', function(req, res) {
+  console.log(req.params);
   var platformScriptPath = platformScriptPathTemplate.replace(':platform', req.params.platform);
   res.render('client/'+req.params.platform+'/index', {
     partyId: demo3rdPartyId,

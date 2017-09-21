@@ -36,12 +36,12 @@ console.log('hello from server');
             barPara.innerHTML = JSON.stringify(result);
           }
         };
-        barXhr.open('POST', serverHost+'/api/3rd/foo/widget'+id+'/bar?partyId='+partyId);
+        barXhr.open('POST', serverHost+'/api/3rd/foo/widget/'+id+'/bar?partyId='+partyId);
         var content = {
           fooId: id
         };
         content = JSON.stringify(content);
-        barXhr.setRequestHeader('Content-type', 'application/json');
+        barXhr.setRequestHeader('content-type', 'application/json');
         barXhr.send(content);
       };
 
